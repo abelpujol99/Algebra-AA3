@@ -1,10 +1,10 @@
 class Tileset {
   
-  PVector pos;
-  Tile[][] tile;
-  float tileSize;
-  final float TILE_HEIGHT = 40f;
-  int rows, cols;
+  private PVector pos;
+  private Tile[][] tile;
+  private float tileSize;
+  private final float TILE_HEIGHT = 40f;
+  private int rows, cols;
   
   Tileset(PVector pos, int rows, int cols, float tileSize) {
   
@@ -21,6 +21,18 @@ class Tileset {
       }
     }
     
+  }
+  
+  
+  void SelectTile(PVector pos) {
+    
+    int x = int(pos.x / tileSize);
+    int y = int(pos.y / tileSize);
+    if (x < cols && x >= 0 && y < rows && y >= 0) {
+      if (!tile[y][x].IsSelected()) {
+        tile[y][x].Select();
+      }
+    }
   }
   
   void Draw() {

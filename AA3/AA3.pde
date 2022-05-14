@@ -7,9 +7,9 @@ float OFFSET_Y;
 float OFFSET_Z;
 
 PVector TILESET_POS = new PVector(-500,0,-500);
-final int ROWS = 40;
-final int COLS = 40;
-final float TILE_SIZE = 25f;
+final int ROWS = 21;
+final int COLS = 21;
+final float TILE_SIZE = 50f;
 
 final color BASE_COLOR = color(130,170,170);
 final color BORDER_COLOR = color(60,80,80);
@@ -32,6 +32,7 @@ void settings() {
 }
 
 void setup() {
+  frameRate(60);
   OFFSET_X = width/2.8f;
   OFFSET_Y = height/1.8f;
   OFFSET_Z = width/2.86f;
@@ -52,23 +53,11 @@ void DrawAtCursor() {
   mousePos = new PVector(mouseX,mouseY);
   PVector mouseWorldPos;
   mouseWorldPos = mousePos.copy();
-  mouseWorldPos.sub(new PVector(960, 487));
+  //mouseWorldPos.sub(new PVector(960, 487));
+  mouseWorldPos.sub(new PVector(960/2, 0));
   
-  PVector cursorPos = new PVector(mouseWorldPos.x,0,mouseWorldPos.y);
+  tileset.SelectTile(mouseWorldPos);
   
-  push();
-  ShiftPerspective();
-  translate(cursorPos.x,cursorPos.y,cursorPos.z);
-  box(100);
-  pop();
-  
-  translate(mouseX,mouseY);
-  textSize(30);
-  text(int(mouseWorldPos.x),-100,-50,0);
-  text(int(mouseWorldPos.y),0,-50,0);
-  text(int(mouseWorldPos.z),100,-50,0);
-  text(int(mousePos.x),-50,50,0);
-  text(int(mousePos.y),50,50,0);
   pop();
 }
 

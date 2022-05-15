@@ -8,7 +8,7 @@ class Curve {
   protected float size = 10f;
   protected int drawAccuracy;
 
-  void Setup(PVector[] p, int drawAccuracy) {
+  void Setup(PVector[] p) {
 
     this.p = new PVector[p.length];
     coefs = new PVector[p.length];
@@ -19,8 +19,6 @@ class Curve {
       coefs[i] = new PVector(0,0,0);
     }
     
-    this.drawAccuracy = drawAccuracy;
-    
     CalculateCoefs();
   }
 
@@ -30,6 +28,7 @@ class Curve {
       for (int j = 0; j < 4; j++) {
         coefs[i].x += p[j].x * intMatrix[i][j];
         coefs[i].y += p[j].y * intMatrix[i][j];
+        coefs[i].z += p[j].z * intMatrix[i][j];
       }
     }
   }
@@ -46,25 +45,5 @@ class Curve {
     }
     
     return ret;
-  }
-
-  void Draw() {
-    push();
-
-    strokeWeight(3);
-    fill(color_l);
-    stroke(color_l);
-    for (float i = 0f; i < 1f; i += 1f / drawAccuracy) {
-      PVector pos = CalculateCurvePoint(i);
-      point(pos.x, pos.y);
-    }
-
-    strokeWeight(0);
-    fill(color_p);
-    for (int i = 0; i < p.length; i++) {
-      ellipse(p[i].x, p[i].y, size, size);
-    }
-
-    pop();
   }
 }

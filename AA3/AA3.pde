@@ -1,3 +1,5 @@
+import camera3D.Camera3D;
+
 ////////////////////////    CONSTANTS    ////////////////////////
 
 final float ROTATION_X = -35.26f;
@@ -12,6 +14,8 @@ final int ROWS = 21;
 final int COLS = 21;
 final float TILE_SIZE = 50f;
 
+final float DIVERGENCE = 1f;
+final color BACKGROUND_COLOR = color(0, 10, 30);
 final color BASE_COLOR = color(130, 170, 170);
 final color BORDER_COLOR = color(60, 80, 80);
 
@@ -20,11 +24,12 @@ final color BORDER_COLOR = color(60, 80, 80);
 Tileset tileset = new Tileset(TILESET_POS, ROWS, COLS, TILE_SIZE);
 
 Camera camera;
+Camera3D cam3d;
 
 ////////////////////////    Game    ////////////////////////
 
 void settings() {
-  size(1920, 1080, P3D);
+  size(1920, 1050, P3D);
 }
 
 void setup() {
@@ -34,7 +39,9 @@ void setup() {
   OFFSET_Z = width/2.86f;
 
   camera = new Camera(new PVector(OFFSET_X,OFFSET_Y,OFFSET_Z), new PVector(ROTATION_X,ROTATION_Y,ROTATION_Z));
-
+  cam3d = new Camera3D(this);
+  cam3d.setBackgroundColor(BACKGROUND_COLOR);
+  //cam3d.renderDefaultAnaglyph().setDivergence(DIVERGENCE);
 }
 
 void draw() {

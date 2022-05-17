@@ -22,6 +22,7 @@ final color BORDER_COLOR = color(60, 80, 80);
 ////////////////////////    Variables    ////////////////////////
 
 Tileset tileset = new Tileset(TILESET_POS, ROWS, COLS, TILE_SIZE);
+Plane plane = new Plane(500, new PVector(0, -50, 0));
 
 Camera camera;
 Camera3D cam3d;
@@ -53,6 +54,8 @@ void draw() {
 
   camera.Perspective();
   camera.Move();
+  plane.Move();
+  plane.Draw();
 
   tileset.Draw();
   camera.DrawAxis();

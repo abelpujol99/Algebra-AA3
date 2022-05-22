@@ -1,5 +1,6 @@
 class Tile {
 
+  int id;
   private PVector pos;
   private PVector size;
   private color color_f;
@@ -14,7 +15,8 @@ class Tile {
 
   private int buildingHeight;
 
-  Tile(PVector pos, PVector size) {
+  Tile(int id, PVector pos, PVector size) {
+    this.id = id;
     this.pos = pos.copy();
     this.size = size;
     color_f = BASE_COLOR;

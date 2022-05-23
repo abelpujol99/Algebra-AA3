@@ -2,22 +2,33 @@ class Plane{
 
    private float speed;
    private float pointOfCurve;
+   private int curveCounter;
    private PVector pos;
    private PVector initPos;
-   private PVector points[];
-   private InterpolationCurve curve;
+   private PVector points[][];
+   private InterpolationCurve curve[];
    
    
    Plane(float speed, PVector initPos){
    
      this.speed = speed;
      this.initPos = initPos.copy();
-     this.points = new PVector[4];
-     points[0] = initPos.copy();
-     points[1] = new PVector(500, -50, 0);
-     points[2] = new PVector(500, -50, 500);
-     points[3] = new PVector(0, -50, 500);
-     curve = new InterpolationCurve(points);
+     this.points = new PVector[2][4];
+   }
+   
+   void SetPoints(PVector points[][]){   
+     this.points = points;
+   }
+   
+   PVector GetInitPos(){
+     return initPos;
+   }
+   
+   void SetCurves(){     
+     curve = new InterpolationCurve[points.length];
+     for(int i = 0; i < curve.length; i++){
+       this.curve[i] = new InterpolationCurve(points[i]);
+     }     
    }
    
    void SetSpeed(float speed){
@@ -37,17 +48,19 @@ class Plane{
    }
    
    void Move(){
-   
+        
      if(pointOfCurve < 1){
-       pointOfCurve += 1 / speed;
-   
-       pos = initPos.copy();
-       pos.add(curve.CalculateCurvePoint(speed));
-     
+       pointOfCurve += 1 / speed;       
+       PVector auxPos = initPos.copy();    
+       auxPos.add(curve[curveCounter].CalculateCurvePoint(pointOfCurve));       
+       pos = auxPos.copy();
      }else{
-       ResetPos();
+       this.pointOfCurve = 0;
+       this.curveCounter++;
+       if(curveCounter == curve.length){
+         curveCounter = 0;
+       }
      }
-     print(pos.x + " " + pos.y + " " + pos.z + "\n");
    }
    
    void ResetPos(){     

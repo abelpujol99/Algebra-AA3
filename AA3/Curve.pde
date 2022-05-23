@@ -24,8 +24,8 @@ class Curve {
 
   void CalculateCoefs() {
   
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++) {
+    for (int i = 0; i < this.p.length; i++) {
+      for (int j = 0; j < this.p.length; j++) {
         coefs[i].x += p[j].x * intMatrix[i][j];
         coefs[i].y += p[j].y * intMatrix[i][j];
         coefs[i].z += p[j].z * intMatrix[i][j];

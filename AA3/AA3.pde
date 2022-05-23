@@ -22,7 +22,7 @@ final color BORDER_COLOR = color(60, 80, 80);
 ////////////////////////    Variables    ////////////////////////
 
 Tileset tileset = new Tileset(TILESET_POS, ROWS, COLS, TILE_SIZE);
-Plane plane = new Plane(500, new PVector(0, -50, 0));
+Plane plane;
 
 Camera camera;
 Camera3D cam3d;
@@ -38,6 +38,24 @@ void setup() {
   OFFSET_X = width/2.8f;
   OFFSET_Y = height/1.8f;
   OFFSET_Z = width/2.86f;
+  
+  PVector pointsPlane[][] = new PVector[2][4];  
+  
+  plane = new Plane(200, new PVector(0, -350, 0));  
+  
+  pointsPlane[0][0] = new PVector(0, 0, 0);
+  pointsPlane[0][1] = new PVector(750, 0, 0);
+  pointsPlane[0][2] = new PVector(0, 0, 750);
+  pointsPlane[0][3] = new PVector(0, 0, 0);
+     
+  pointsPlane[1][0] = pointsPlane[0][3].copy();
+  pointsPlane[1][1] = new PVector(0, 0, -750);
+  pointsPlane[1][2] = new PVector(-750, 0, 0);
+  pointsPlane[1][3] = new PVector(0, 0, 0);
+  
+  plane.SetPoints(pointsPlane);
+  plane.SetCurves(); 
+  
 
   camera = new Camera(new PVector(OFFSET_X,OFFSET_Y,OFFSET_Z), new PVector(ROTATION_X,ROTATION_Y,ROTATION_Z));
   cam3d = new Camera3D(this);

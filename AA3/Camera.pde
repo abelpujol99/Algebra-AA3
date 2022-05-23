@@ -44,7 +44,7 @@ class Camera {
       PVector m = curve.CalculateCurvePoint(time);
       PVector p = posInit.copy();
       p.add(m);
-      
+            
       PVector r = new PVector(0,360*time,0);
       
       
@@ -54,6 +54,7 @@ class Camera {
     else {
       ResetPos();
     }
+     
   }
   
   void ResetPos() {

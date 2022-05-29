@@ -6,9 +6,11 @@ class Camera {
   PVector dirInit;
   PVector dirChange;
 
-  BezierCurve curve;
+  final int curveNum = 2;
+  BezierCurve[] curve = new BezierCurve[curveNum];
   final int pointNum = 4;
-  PVector[] points = new PVector[pointNum];
+  PVector[] points1 = new PVector[pointNum];
+  PVector[] points2 = new PVector[pointNum];
   final int steps = 500;
   float time = 0;
 
@@ -17,13 +19,21 @@ class Camera {
     this.posInit = pos.copy();
     this.dir = dir.copy();
     this.dirInit = dir.copy();
-    dirChange = new PVector(0,0,0);
+    dirChange = new PVector(0, 0, 0);
 
-    points[0] = new PVector(0, 0, 0);  
-    points[1] = new PVector(-500, 0, -1000);  
-    points[2] = new PVector(1000, 0, 500);  
-    points[3] = new PVector(0, 0, 0);
-    curve = new BezierCurve(points);
+    PVector endPoint = new PVector(-1000, 0, 1000);
+
+    points1[0] = new PVector(0, 0, 0);  
+    points1[1] = new PVector(0, 0, 1000);  
+    points1[2] = new PVector(-1000, 0, 2000);  
+    points1[3] = endPoint.copy();
+    curve[0] = new BezierCurve(points1);
+
+    points2[0] = new PVector(0, 0, 0);  
+    points2[1] = new PVector(0, 0, -200);  
+    points2[2] = new PVector(0, 0, -1000);  
+    points2[3] = endPoint.copy().mult(-1);
+    curve[1] = new BezierCurve(points2);
   }
 
 
@@ -38,28 +48,34 @@ class Camera {
   }
 
   void Move() {
-    if (time < 1f) {
-      time += 1f / steps;
+    if (time / 100 < curveNum) {
       
-      PVector m = curve.CalculateCurvePoint(time);
+      float t = time % 100 / 100f;
+
+      PVector m = curve[int(time/100)].CalculateCurvePoint(t);
       PVector p = posInit.copy();
       p.add(m);
-      
-      PVector r = new PVector(0,360*time,0);
-      
-      
+
+      //PVector r = new PVector(0, 360f * ((time / 100f) / curveNum), 0);
+      float a = degrees(PVector.angleBetween(new PVector(p.x, 0, p.z), new PVector(posInit.x, 0, posInit.z)));
+      print(a,"\n");
+
       pos = p.copy();
-      dirChange = r.copy();
-    }
-    else {
-      ResetPos();
+      //dirChange = r.copy();
+      dirChange = new PVector(0, -90f+a, 0);
+
+      if (int(time / 100f) < int((time + (100f / steps)) / 100f)) {
+        posInit = pos.copy();
+      }
+
+      time += 100f / steps;
     }
   }
-  
+
   void ResetPos() {
     pos = posInit.copy();
     dir = dirInit.copy();
-    dirChange = new PVector(0,0,0);
+    dirChange = new PVector(0, 0, 0);
   }
 
 

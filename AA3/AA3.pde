@@ -29,8 +29,6 @@ Camera camera;
 //Camera3D cam3d;
 Picker picker;
 
-Tile[] tiles = new Tile[3];
-
 ////////////////////////    Game    ////////////////////////
 
 void settings() {
@@ -41,7 +39,7 @@ void setup() {
   frameRate(60);
   smooth();
   OFFSET_X = width/2.8f;
-  OFFSET_Y = height/1.8f;
+  OFFSET_Y = height/1.9f;
   OFFSET_Z = width/2.86f;
 
   camera = new Camera(new PVector(OFFSET_X, OFFSET_Y, OFFSET_Z), new PVector(ROTATION_X, ROTATION_Y, ROTATION_Z));
@@ -50,10 +48,6 @@ void setup() {
   //cam3d.renderDefaultAnaglyph().setDivergence(DIVERGENCE);
 
   picker = new Picker(this);
-
-  for (int i = 0; i < tiles.length; i++) {
-    tiles[i] = new Tile(i, new PVector(100*i, 0, 0), new PVector(50, 50, 50));
-  }
 }
 
 void draw() {
@@ -63,15 +57,9 @@ void draw() {
   //Draw
 
   camera.Perspective();
-  //camera.Move();
+  camera.Move();
   plane.Move();
   plane.Draw();
-/*
-  for (int i = 0; i < tiles.length; i++) {
-    picker.start(tiles[i].id);
-    tiles[i].Draw();
-  }
-  picker.stop();*/
 
   tileset.Draw();
   camera.DrawAxis();

@@ -19,6 +19,8 @@ final float DIVERGENCE = 1f;
 final color BACKGROUND_COLOR = color(0, 10, 30);
 final color BASE_COLOR = color(130, 170, 170);
 final color BORDER_COLOR = color(60, 80, 80);
+final color CUTSCENE_BUTTON_COLOR = color(20, 100, 110);
+final color BUTTON_TEXT_COLOR = color(200, 210, 210);
 
 ////////////////////////    Variables    ////////////////////////
 
@@ -28,6 +30,9 @@ Plane plane = new Plane(500, new PVector(0, -350, 0));
 Camera camera;
 //Camera3D cam3d;
 Picker picker;
+
+Button cutsceneButton;
+boolean cutscene = false;
 
 ////////////////////////    Game    ////////////////////////
 
@@ -42,10 +47,12 @@ void setup() {
   OFFSET_Y = height/1.9f;
   OFFSET_Z = width/2.86f;
 
-  camera = new Camera(new PVector(OFFSET_X, OFFSET_Y, OFFSET_Z), new PVector(ROTATION_X, ROTATION_Y, ROTATION_Z));
+  ResetCamera();
   //cam3d = new Camera3D(this);
   //cam3d.setBackgroundColor(BACKGROUND_COLOR);
   //cam3d.renderDefaultAnaglyph().setDivergence(DIVERGENCE);
+
+  cutsceneButton = new Button(1, new PVector(width/20, 19*height/20), width/20, CUTSCENE_BUTTON_COLOR);
 
   picker = new Picker(this);
 }
@@ -55,15 +62,23 @@ void draw() {
   lights();
 
   //Draw
-
+  //UI
+  picker.start(cutsceneButton.id);
+  cutsceneButton.Draw();
+  
+  //Camera
   camera.Perspective();
-  camera.Move();
+  if (cutscene) {
+    cutscene = camera.Move();
+  }
+  //Planes
   plane.Move();
   plane.Draw();
-
+  //Terrain
   tileset.Draw();
   camera.DrawAxis();
-
+  
+  picker.stop();
 }
 
 void DrawAtCursor() {
@@ -78,8 +93,21 @@ void DrawAtCursor() {
   pop();
 }
 
+void PressButton() {
+  int id = picker.get(mouseX, mouseY);
+  if (id == cutsceneButton.id) {
+    ResetCamera();
+    cutscene = true;
+  }
+}
+
+void ResetCamera() {
+  camera = new Camera(new PVector(OFFSET_X, OFFSET_Y, OFFSET_Z), new PVector(ROTATION_X, ROTATION_Y, ROTATION_Z));
+}
+
 void mousePressed() {
   DrawAtCursor();
+  PressButton();
 }
 
 void mouseDragged() {

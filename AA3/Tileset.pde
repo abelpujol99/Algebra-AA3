@@ -41,8 +41,6 @@ class Tileset {
       }
     }
 
-    picker.stop();
-
     push();
     PVector size = new PVector(rows * tileSize, cols * tileSize);
     translate(pos.x + size.x/2f - tileSize/2, pos.y, pos.z + size.y/2f - tileSize/2);

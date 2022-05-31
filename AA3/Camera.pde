@@ -21,11 +21,11 @@ class Camera {
     this.dirInit = dir.copy();
     dirChange = new PVector(0, 0, 0);
 
-    PVector endPoint = new PVector(-1000, 0, 1000);
+    PVector endPoint = new PVector(-700, -300, 700);
 
     points1[0] = new PVector(0, 0, 0);  
     points1[1] = new PVector(0, 0, 1000);  
-    points1[2] = new PVector(-1000, 0, 2000);  
+    points1[2] = new PVector(-400, 0, 1000);  
     points1[3] = endPoint.copy();
     curve[0] = new BezierCurve(points1);
 
@@ -47,29 +47,24 @@ class Camera {
     rotateZ(radians(dirChange.z));
   }
 
-  void Move() {
+  boolean Move() {
+    boolean ret = false;
     if (time / 100 < curveNum) {
-      
+      ret = true;
       float t = time % 100 / 100f;
 
       PVector m = curve[int(time/100)].CalculateCurvePoint(t);
       PVector p = posInit.copy();
       p.add(m);
 
-      //PVector r = new PVector(0, 360f * ((time / 100f) / curveNum), 0);
-      float a = degrees(PVector.angleBetween(new PVector(p.x, 0, p.z), new PVector(posInit.x, 0, posInit.z)));
-      print(a,"\n");
-
       pos = p.copy();
-      //dirChange = r.copy();
-      dirChange = new PVector(0, -90f+a, 0);
 
       if (int(time / 100f) < int((time + (100f / steps)) / 100f)) {
         posInit = pos.copy();
       }
-
       time += 100f / steps;
     }
+    return ret;
   }
 
   void ResetPos() {

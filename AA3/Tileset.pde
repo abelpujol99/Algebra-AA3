@@ -50,4 +50,8 @@ class Tileset {
     box(size.x+1, TILE_HEIGHT-1, size.y+1);
     pop();
   }
+  
+  boolean IsTileSelected(int x, int y) {
+    return tile[x][y].IsSelected();
+  }
 }

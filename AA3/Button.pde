@@ -30,4 +30,27 @@ class Button {
     
     pop();
   }
+  
+  void CameraIcon() {
+    push();
+    translate(pos.x, pos.y, pos.z);
+    fill(200,210,210);
+    strokeWeight(0);
+    translate(-size/4,-size/6);
+    rect(0,0,size/2,3*size/8,10);
+    push();
+    noFill();
+    strokeWeight(3);
+    stroke(color_f);
+    ellipse(size/4,1.5*size/8,size/5,size/5);
+    pop();
+    translate(size/4,0,0);
+    beginShape();
+    vertex(-size/7,0);
+    vertex(size/7,0);
+    vertex(size/9,-size/15);
+    vertex(-size/9,-size/15);
+    endShape(CLOSE);
+    pop();
+  }
 }

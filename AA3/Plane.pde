@@ -1,81 +1,79 @@
-class Plane{
+class Plane {
 
-   private int curveState;
-   private float speed;
-   private float pointOfCurve;
-   private PVector pos;
-   private PVector initPos;
-   private PVector points[][];
-   private InterpolationCurve curve[];
-   
-   
-   Plane(float speed, PVector initPos){
-   
-     this.curveState = 0;
-     this.speed = speed;
-     this.initPos = initPos.copy();
-     this.points = new PVector[2][4];
-     points[0][0] = new PVector(0, 0, 0);
-     points[0][1] = new PVector(500, 0, 0);
-     points[0][2] = new PVector(500, 0, 500);
-     points[0][3] = new PVector(0, 0, 0);
-     points[1][0] = new PVector(-500, 0, 0);
-     points[1][1] = new PVector(-500, 0, -500);
-     points[1][2] = new PVector(0, 0, -500);
-     points[1][3] = new PVector(0, 0, 0);
-     this.curve = new InterpolationCurve[2];
-     for(int i = 0; i < points.length; i++){
-       curve[i] = new InterpolationCurve(points[i]);
-     }      
-   }
-   
-   void SetSpeed(float speed){
-     this.speed = speed;
-   }
-   
-   float GetSpeed(){
-     return speed;
-   }   
-   
-   void SetPos(PVector pos){
-     this.pos = pos;   
-   }
-   
-   PVector GetPos(){
-     return pos;
-   }
-   
-   void Move(){
-   
-     if(pointOfCurve < 1 && curveState < 2){
-       pointOfCurve += 1 / speed;
-   
-       pos = initPos.copy();
-       pos.add(curve[0].CalculateCurvePoint(pointOfCurve));
-     }
-     else if(curveState < 2){
-       this.curveState++;
-     }
-     else{
-       ResetPos();
-     }
-   }
-   
-   void ResetPos(){     
-     pos = initPos.copy();
-   }
-   
-   void Draw(){
+  private PVector pos;
+  private PVector posInit;
+  private PVector posFinal;
+  private float steps;
+  private PVector points[];
+  private int curveNum;
+  private InterpolationCurve curve;
+  private float time;
+  private float size;
 
-     push();
-     
-     strokeWeight(3);
-     fill(color(50,200,150));
-     stroke(color(50,200,150));
-     translate(pos.x, pos.y, pos.z);
-     sphere(20);
-     
-     pop();
+  Plane(float steps) {
+    Spawn();
+    this.steps = steps;
+  }
 
-   }
+  void Spawn() {
+    time = 0;
+    size = random(width/150, width/100);
+    RandomPosInit();
+    pos = posInit.copy();
+    curveNum = int(random(2, 4));
+    points = new PVector[4];
+    points[3] = posInit.copy();
+    CalculateNewCurve();
+    curve = new InterpolationCurve(points);
+  }
+
+  //Move:
+  //  Moves plane according to randomly generated
+  //  interpolation curves
+  boolean Move() {
+    boolean ret = false;
+    if (time / 100 < curveNum) {
+      ret = true;
+      float t = time % 100 / 100f;
+
+      PVector m = curve.CalculateCurvePoint(t);
+      pos = m.copy();
+
+      //Check if the end of the curve has been reached and it's not the last curve
+      if (int(time / 100f) < int((time + (100f / steps)) / 100f) && int(time / 100f) <= curveNum - 1) {
+        //Calculate new curve
+        CalculateNewCurve();
+        //If the calculated curve is last, set plane's last point
+        if (int(time / 100f) == curveNum - 2) {
+          points[3] = posFinal.copy();
+          print(points[3]);
+        }
+        //update curve
+        curve = new InterpolationCurve(points);
+      }
+      time += 100f / steps;
+    }
+    return ret;
+  }
+
+  void CalculateNewCurve() {
+    points[0] = points[3].copy();
+    points[1] = new PVector(random(-COLS * TILE_SIZE / 2, COLS * TILE_SIZE / 2), PLANE_Y, random(-ROWS * TILE_SIZE / 2, ROWS * TILE_SIZE / 2));
+    points[2] = new PVector(random(-COLS * TILE_SIZE / 2, COLS * TILE_SIZE / 2), PLANE_Y, random(-ROWS * TILE_SIZE / 2, ROWS * TILE_SIZE / 2));
+    points[3] = new PVector(random(-COLS * TILE_SIZE / 2, COLS * TILE_SIZE / 2), PLANE_Y, random(-ROWS * TILE_SIZE / 2, ROWS * TILE_SIZE / 2));
+  }
+
+  void RandomPosInit() {
+    float angle = random(0, 360);
+    posInit = new PVector(PLANE_START_OFFSET * cos(radians(angle)), PLANE_Y, PLANE_START_OFFSET * sin(radians(angle)));
+    posFinal = new PVector(-posInit.x, PLANE_Y, -posInit.z);
+    //dir = PVector.sub(new PVector(-posInit.x, posInit.y, -posInit.z), posInit);
+  }
+
+  void Draw() {
+    push();
+    translate(pos.x, pos.y, pos.z);
+    sphere(size);
+    pop();
+  }
 }

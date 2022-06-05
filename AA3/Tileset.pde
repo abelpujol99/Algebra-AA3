@@ -6,6 +6,10 @@ class Tileset {
   private final float TILE_HEIGHT = 40f;
   private int rows, cols;
 
+  private final int CUTSCENE_POINTS = CUTSCENE_CURVE_NUM * (POINT_NUM - 1) - 1;
+  private PVector cutscenePoints[] = new PVector[CUTSCENE_POINTS];
+  private int validCutscenePoints = 0;
+
   Tileset(PVector pos, int rows, int cols, float tileSize) {
 
     this.pos = pos.copy();
@@ -24,20 +28,40 @@ class Tileset {
     }
   }
 
+  void SetCutscenePoint(float r, float c) {
+    if (!tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].IsSelected()) {
+      //Add point
+      if (tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].cutscene_id == -1) {
+        if (validCutscenePoints < CUTSCENE_POINTS) {
 
-  void SelectTile(int id) {
-    if (id < rows * cols && !tile[id/cols][id%cols].IsSelected()) {
-      tile[id/cols][id%cols].Select();
+          PVector temp = tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].GetPos().copy();
+          temp.sub(pos);
+
+          cutscenePoints[validCutscenePoints] = temp.copy();
+          tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].cutscene_id = validCutscenePoints;
+          validCutscenePoints++;
+        }
+      }
+      //Remove point
+      else {
+
+        tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].cutscene_id = -1;
+        validCutscenePoints--;
+      }
+    }
+  }
+
+  void SelectTile(float r, float c) {
+
+    if (!tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].IsSelected() && tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].cutscene_id == -1) {
+      tile[int(r/TILE_SIZE)][int(c/TILE_SIZE)].Select();
     }
   }
 
   void Draw() {
-    int id = 0;
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
-        picker.start(id);
         tile[i][j].Draw();
-        id++;
       }
     }
 
@@ -50,8 +74,16 @@ class Tileset {
     box(size.x+1, TILE_HEIGHT-1, size.y+1);
     pop();
   }
-  
+
+  PVector GetCutscenePoint(int cid) {
+    return cutscenePoints[cid];
+  }
+
   boolean IsTileSelected(int x, int y) {
     return tile[x][y].IsSelected();
+  }
+
+  boolean ValidCutscene() {
+    return validCutscenePoints == CUTSCENE_POINTS;
   }
 }

@@ -1,9 +1,11 @@
 class Tile {
 
   int id;
+  int cutscene_id = -1;
   private PVector pos;
   private PVector size;
   private color color_f;
+  private color color_c;
 
   private boolean selected = false;
   private boolean buildingDone = false;
@@ -20,6 +22,7 @@ class Tile {
     this.pos = pos.copy();
     this.size = size;
     color_f = BASE_COLOR;
+    color_c = color(100,230,150);
   }
 
   void Select() {
@@ -37,8 +40,11 @@ class Tile {
 
     push();
     //base
-    fill(color_f);
     noStroke();
+    fill(color_f);
+    if (cutscene_id >= 0) {
+      fill(color_c);
+    }
     box(size.x, size.y, size.z);
     pop();
 
@@ -79,5 +85,9 @@ class Tile {
 
   boolean IsSelected() {
     return selected;
+  }
+  
+  PVector GetPos() {
+    return pos;
   }
 }

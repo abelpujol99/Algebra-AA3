@@ -1,21 +1,34 @@
 class Button {
 
   int id;
+  private boolean active = true;
   private PVector pos;
   private int size;
   private color color_f;
+  private color colorActive;
+  private color colorInactive;
 
-
-  Button(int id, PVector pos, int size, color color_f) {
+  Button(int id, PVector pos, int size, color colorActive) {
     this.id = id + 1000;
     this.pos = pos.copy();
     this.size = size;
-    this.color_f = color_f;
+    this.colorActive = colorActive;
+    this.colorInactive = color((red(colorActive)+green(colorActive)+blue(colorActive))/3);
   }
 
+  boolean CheckPress(int x, int y) {
+    return ((x < pos.x+size/2 && x > pos.x-size/2) && (y < pos.y+size/3 && y > pos.y-size/3));
+  }
 
   void Draw() {
     push();
+    if (active) {
+      color_f = colorActive;
+    }
+    else {
+      color_f = colorInactive;
+    }
+    
     translate(pos.x, pos.y, pos.z);
     fill(color_f);
     strokeWeight(2);
@@ -52,5 +65,13 @@ class Button {
     vertex(-size/9,-size/15);
     endShape(CLOSE);
     pop();
+  }
+  
+  void SetActive() {
+    active = true;
+  }
+  
+  void SetInactive() {
+    active = false;
   }
 }
